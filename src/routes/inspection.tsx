@@ -37,36 +37,47 @@ function InspectionPage() {
   const meta = VERDICT_META[insp.verdict];
   const rec = RECOMMENDATIONS.find((r) => r.inspectionId === insp.id);
 
-  const onFile = (file: File) => {
-    const url = URL.createObjectURL(file);
+  const onFile = async (file: File) => {
+    setUploadError(null);
     setAnalysing(true);
-    setTimeout(() => {
+    try {
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(new Error("Could not read that file."));
+        reader.readAsDataURL(file);
+      });
+
+      const r = await analyse({ data: { dataUrl, fileName: file.name } });
+
+      const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
       const u: Inspection = {
         id: "UPL-" + String(Date.now()).slice(-4),
         unitId: "U-" + String(Date.now()).slice(-5),
         batchId: "B-2291",
         stationId: "press-02",
         product: file.name.replace(/\.[^.]+$/, ""),
-        image: url,
-        verdict: "review",
-        defectClass: "Structural crack",
-        confidence: 58,
-        uncertainty: 29,
-        novelty: 22,
-        bbox: { x: 36, y: 32, w: 26, h: 30 },
-        sizeMm: "est.",
+        image: dataUrl,
+        verdict: r.verdict,
+        defectClass: r.defectClass ?? undefined,
+        confidence: clamp(r.confidence),
+        uncertainty: clamp(r.uncertainty),
+        novelty: clamp(r.novelty),
+        bbox: r.hasRegion && r.bbox.w > 0 && r.bbox.h > 0 ? { x: clamp(r.bbox.x), y: clamp(r.bbox.y), w: clamp(r.bbox.w), h: clamp(r.bbox.h) } : undefined,
+        sizeMm: r.sizeMm ?? undefined,
         capturedAt: new Date().toISOString().slice(11, 19),
-        evidence: [
-          { kind: "image", text: "Uploaded image scored by demo model; below 70% auto-decision threshold, routed to review" },
-          { kind: "batch", text: "Attributed to current batch B-2291 (Press 02) for demonstration" },
-          { kind: "history", text: "Ensemble disagreement 2/3 — engineer confirmation required" },
-        ],
+        evidence: r.evidence?.length
+          ? r.evidence
+          : [{ kind: "image", text: "Uploaded image analysed by the vision model." }],
         process: { cycle: 42, temp: 175, sinceChangeoverMin: 14, utilization: 98 },
       };
       setUploaded(u);
       setInspectionId(u.id);
+    } catch (e) {
+      setUploadError(e instanceof Error ? e.message : "Analysis failed. Please try another image.");
+    } finally {
       setAnalysing(false);
-    }, 1400);
+    }
   };
 
   const queue = uploaded ? [uploaded, ...INSPECTIONS] : INSPECTIONS;
