@@ -57,8 +57,16 @@ export function InspectionViewer({ insp, compact = false }: { insp: Inspection; 
               style={{ left: `${insp.bbox.x}%`, top: `${insp.bbox.y}%`, width: `${insp.bbox.w}%`, height: `${insp.bbox.h}%` }}
             />
             <div
-              className={cn("absolute rounded-sm px-1.5 py-0.5 font-mono text-[9px] font-bold text-base", labelTone)}
-              style={{ left: `${insp.bbox.x}%`, top: `calc(${insp.bbox.y}% - 18px)` }}
+              className={cn("absolute whitespace-nowrap rounded-sm px-1.5 py-0.5 font-mono text-[9px] font-bold text-base", labelTone)}
+              style={{
+                left: `${Math.min(insp.bbox.x + insp.bbox.w / 2, 100)}%`,
+                top:
+                  insp.bbox.y + insp.bbox.h > 90
+                    ? `calc(${insp.bbox.y + insp.bbox.h}% - 20px)`
+                    : `calc(${insp.bbox.y + insp.bbox.h}% + 6px)`,
+                transform: "translateX(-50%)",
+                maxWidth: "96%",
+              }}
             >
               {(insp.defectClass ?? "UNKNOWN PATTERN").toUpperCase()} {insp.sizeMm && `· ${insp.sizeMm}`}
             </div>
