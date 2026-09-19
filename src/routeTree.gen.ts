@@ -10,11 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BottlenecksRouteImport } from './routes/bottlenecks'
 import { Route as InspectionRouteImport } from './routes/inspection'
+import { Route as RootCauseRouteImport } from './routes/root-cause'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BottlenecksRoute = BottlenecksRouteImport.update({
+  id: '/bottlenecks',
+  path: '/bottlenecks',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InspectionRoute = InspectionRouteImport.update({
@@ -22,31 +29,44 @@ const InspectionRoute = InspectionRouteImport.update({
   path: '/inspection',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RootCauseRoute = RootCauseRouteImport.update({
+  id: '/root-cause',
+  path: '/root-cause',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bottlenecks': typeof BottlenecksRoute
   '/inspection': typeof InspectionRoute
+  '/root-cause': typeof RootCauseRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bottlenecks': typeof BottlenecksRoute
   '/inspection': typeof InspectionRoute
+  '/root-cause': typeof RootCauseRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bottlenecks': typeof BottlenecksRoute
   '/inspection': typeof InspectionRoute
+  '/root-cause': typeof RootCauseRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/inspection'
+  fullPaths: '/' | '/bottlenecks' | '/inspection' | '/root-cause'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/inspection'
-  id: '__root__' | '/' | '/inspection'
+  to: '/' | '/bottlenecks' | '/inspection' | '/root-cause'
+  id: '__root__' | '/' | '/bottlenecks' | '/inspection' | '/root-cause'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BottlenecksRoute: typeof BottlenecksRoute
   InspectionRoute: typeof InspectionRoute
+  RootCauseRoute: typeof RootCauseRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +78,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bottlenecks': {
+      id: '/bottlenecks'
+      path: '/bottlenecks'
+      fullPath: '/bottlenecks'
+      preLoaderRoute: typeof BottlenecksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inspection': {
       id: '/inspection'
       path: '/inspection'
@@ -65,12 +92,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InspectionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/root-cause': {
+      id: '/root-cause'
+      path: '/root-cause'
+      fullPath: '/root-cause'
+      preLoaderRoute: typeof RootCauseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BottlenecksRoute: BottlenecksRoute,
   InspectionRoute: InspectionRoute,
+  RootCauseRoute: RootCauseRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
