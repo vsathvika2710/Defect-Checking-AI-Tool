@@ -99,10 +99,11 @@ function InspectionPage() {
             className="flex w-full flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-line bg-panel2/40 px-3 py-6 text-center transition-colors hover:border-signal/60 hover:bg-signal/5"
           >
             <span className="font-mono text-[11px] text-ink">{analysing ? "Analysing…" : "Drop inspection image"}</span>
-            <span className="font-mono text-[9px] text-faint">{analysing ? "running detector · localiser · uncertainty" : "or click to browse · JPG / PNG"}</span>
+            <span className="font-mono text-[9px] text-faint">{analysing ? "inspecting image for visible defects" : "or click to browse · JPG / PNG"}</span>
             {analysing && <Bar value={100} className="mt-2 h-1" />}
           </button>
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
+          {uploadError && <p className="mt-2 font-mono text-[9px] leading-relaxed text-defect">{uploadError}</p>}
         </Panel>
 
         <Panel>
