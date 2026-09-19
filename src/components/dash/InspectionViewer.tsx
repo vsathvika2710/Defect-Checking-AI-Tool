@@ -5,6 +5,7 @@ import { Bar, StatusBadge } from "./ui";
 
 export function InspectionViewer({ insp, compact = false }: { insp: Inspection; compact?: boolean }) {
   const [mode, setMode] = useState<"box" | "heat">("box");
+  const [aspect, setAspect] = useState<number | null>(null);
   const meta = VERDICT_META[insp.verdict];
   const boxTone = insp.verdict === "novel" ? "border-signal" : insp.verdict === "review" ? "border-warn" : "border-defect";
   const labelTone = insp.verdict === "novel" ? "bg-signal" : insp.verdict === "review" ? "bg-warn" : "bg-defect";
