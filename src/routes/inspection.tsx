@@ -27,7 +27,9 @@ function InspectionPage() {
   const { inspectionId, setInspectionId, setHighlightRec } = useSelection();
   const [uploaded, setUploaded] = useState<Inspection | null>(null);
   const [analysing, setAnalysing] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const analyse = useServerFn(analyseInspectionImage);
 
   const insp = uploaded && inspectionId === uploaded.id ? uploaded : inspectionById(inspectionId);
   const batch = batchById(insp.batchId);
