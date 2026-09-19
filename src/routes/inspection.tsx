@@ -49,7 +49,10 @@ function InspectionPage() {
       });
 
       const sendUrl = await shrink(dataUrl);
-      const r = await analyse({ data: { dataUrl: sendUrl, fileName: file.name } });
+      const cacheKey = "veridic-analysis-" + hashString(sendUrl);
+      const cached = readCache(cacheKey);
+      const r = cached ?? (await analyse({ data: { dataUrl: sendUrl, fileName: file.name } }));
+      if (!cached) writeCache(cacheKey, r);
 
       const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
       const u: Inspection = {
