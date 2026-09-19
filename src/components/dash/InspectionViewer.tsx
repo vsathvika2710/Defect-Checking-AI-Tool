@@ -60,7 +60,10 @@ export function InspectionViewer({ insp, compact = false }: { insp: Inspection; 
               className={cn("absolute whitespace-nowrap rounded-sm px-1.5 py-0.5 font-mono text-[9px] font-bold text-base", labelTone)}
               style={{
                 left: `${Math.min(insp.bbox.x + insp.bbox.w / 2, 100)}%`,
-                top: `calc(${Math.min(insp.bbox.y + insp.bbox.h, 100)}% + 6px)`,
+                top:
+                  insp.bbox.y + insp.bbox.h > 90
+                    ? `calc(${insp.bbox.y + insp.bbox.h}% - 20px)`
+                    : `calc(${insp.bbox.y + insp.bbox.h}% + 6px)`,
                 transform: "translateX(-50%)",
                 maxWidth: "96%",
               }}
