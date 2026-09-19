@@ -213,7 +213,7 @@ function Metric({ label, value, tone }: { label: string; value: number; tone: "s
   );
 }
 
-function Row({ k, v, tone }: { k: string; v: string; tone?: "defect" | "warn" }) {
+function Row({ k, v, tone }: { k: string; v: string; tone?: "defect" | "warn" | undefined }) {
   return (
     <div className="contents">
       <dt className="text-faint">{k}</dt>
