@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BottlenecksRouteImport } from './routes/bottlenecks'
+import { Route as EconomicRouteImport } from './routes/economic'
 import { Route as InspectionRouteImport } from './routes/inspection'
+import { Route as RecommendationsRouteImport } from './routes/recommendations'
 import { Route as RootCauseRouteImport } from './routes/root-cause'
 
 const IndexRoute = IndexRouteImport.update({
@@ -24,9 +26,19 @@ const BottlenecksRoute = BottlenecksRouteImport.update({
   path: '/bottlenecks',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EconomicRoute = EconomicRouteImport.update({
+  id: '/economic',
+  path: '/economic',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InspectionRoute = InspectionRouteImport.update({
   id: '/inspection',
   path: '/inspection',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecommendationsRoute = RecommendationsRouteImport.update({
+  id: '/recommendations',
+  path: '/recommendations',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RootCauseRoute = RootCauseRouteImport.update({
@@ -38,34 +50,61 @@ const RootCauseRoute = RootCauseRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bottlenecks': typeof BottlenecksRoute
+  '/economic': typeof EconomicRoute
   '/inspection': typeof InspectionRoute
+  '/recommendations': typeof RecommendationsRoute
   '/root-cause': typeof RootCauseRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bottlenecks': typeof BottlenecksRoute
+  '/economic': typeof EconomicRoute
   '/inspection': typeof InspectionRoute
+  '/recommendations': typeof RecommendationsRoute
   '/root-cause': typeof RootCauseRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/bottlenecks': typeof BottlenecksRoute
+  '/economic': typeof EconomicRoute
   '/inspection': typeof InspectionRoute
+  '/recommendations': typeof RecommendationsRoute
   '/root-cause': typeof RootCauseRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/bottlenecks' | '/inspection' | '/root-cause'
+  fullPaths:
+    | '/'
+    | '/bottlenecks'
+    | '/economic'
+    | '/inspection'
+    | '/recommendations'
+    | '/root-cause'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/bottlenecks' | '/inspection' | '/root-cause'
-  id: '__root__' | '/' | '/bottlenecks' | '/inspection' | '/root-cause'
+  to:
+    | '/'
+    | '/bottlenecks'
+    | '/economic'
+    | '/inspection'
+    | '/recommendations'
+    | '/root-cause'
+  id:
+    | '__root__'
+    | '/'
+    | '/bottlenecks'
+    | '/economic'
+    | '/inspection'
+    | '/recommendations'
+    | '/root-cause'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BottlenecksRoute: typeof BottlenecksRoute
+  EconomicRoute: typeof EconomicRoute
   InspectionRoute: typeof InspectionRoute
+  RecommendationsRoute: typeof RecommendationsRoute
   RootCauseRoute: typeof RootCauseRoute
 }
 
@@ -85,11 +124,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BottlenecksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/economic': {
+      id: '/economic'
+      path: '/economic'
+      fullPath: '/economic'
+      preLoaderRoute: typeof EconomicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inspection': {
       id: '/inspection'
       path: '/inspection'
       fullPath: '/inspection'
       preLoaderRoute: typeof InspectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recommendations': {
+      id: '/recommendations'
+      path: '/recommendations'
+      fullPath: '/recommendations'
+      preLoaderRoute: typeof RecommendationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/root-cause': {
@@ -105,7 +158,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BottlenecksRoute: BottlenecksRoute,
+  EconomicRoute: EconomicRoute,
   InspectionRoute: InspectionRoute,
+  RecommendationsRoute: RecommendationsRoute,
   RootCauseRoute: RootCauseRoute,
 }
 export const routeTree = rootRouteImport
