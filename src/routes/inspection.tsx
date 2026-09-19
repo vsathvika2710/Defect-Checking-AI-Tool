@@ -48,7 +48,8 @@ function InspectionPage() {
         reader.readAsDataURL(file);
       });
 
-      const r = await analyse({ data: { dataUrl, fileName: file.name } });
+      const sendUrl = await shrink(dataUrl);
+      const r = await analyse({ data: { dataUrl: sendUrl, fileName: file.name } });
 
       const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
       const u: Inspection = {
