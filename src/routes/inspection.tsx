@@ -59,12 +59,12 @@ function InspectionPage() {
         product: file.name.replace(/\.[^.]+$/, ""),
         image: dataUrl,
         verdict: r.verdict,
-        defectClass: r.defectClass ?? undefined,
+        defectClass: r.defectClass ?? null,
         confidence: clamp(r.confidence),
         uncertainty: clamp(r.uncertainty),
         novelty: clamp(r.novelty),
-        bbox: r.hasRegion && r.bbox.w > 0 && r.bbox.h > 0 ? { x: clamp(r.bbox.x), y: clamp(r.bbox.y), w: clamp(r.bbox.w), h: clamp(r.bbox.h) } : undefined,
-        sizeMm: r.sizeMm ?? undefined,
+        bbox: r.hasRegion && r.bbox.w > 0 && r.bbox.h > 0 ? { x: clamp(r.bbox.x), y: clamp(r.bbox.y), w: clamp(r.bbox.w), h: clamp(r.bbox.h) } : null,
+        sizeMm: r.sizeMm ?? null,
         capturedAt: new Date().toISOString().slice(11, 19),
         evidence: r.evidence?.length
           ? r.evidence
