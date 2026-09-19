@@ -224,6 +224,35 @@ function InspectionPage() {
   );
 }
 
+type Analysis = Awaited<ReturnType<typeof analyseInspectionImage>>;
+
+function hashString(s: string): string {
+  let h1 = 0x811c9dc5;
+  let h2 = 0x01000193;
+  for (let i = 0; i < s.length; i++) {
+    h1 = ((h1 ^ s.charCodeAt(i)) * 16777619) >>> 0;
+    h2 = ((h2 + s.charCodeAt(i) * (i + 1)) * 2654435761) >>> 0;
+  }
+  return h1.toString(36) + h2.toString(36) + "-" + s.length;
+}
+
+function readCache(key: string): Analysis | null {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as Analysis) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeCache(key: string, value: Analysis) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // storage full or unavailable — caching is optional
+  }
+}
+
 async function shrink(dataUrl: string, max = 896): Promise<string> {
   try {
     const img = await new Promise<HTMLImageElement>((resolve, reject) => {
