@@ -86,7 +86,7 @@ function InspectionPage() {
     <div className="grid gap-3 lg:grid-cols-12">
       <div className="space-y-3 lg:col-span-3">
         <Panel>
-          <PanelHeader title="Upload image" meta="demo model" />
+          <PanelHeader title="Upload image" meta="AI vision" />
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
