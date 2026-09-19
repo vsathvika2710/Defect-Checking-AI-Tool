@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useRef, useState } from "react";
+import { analyseInspectionImage } from "@/lib/inspect.functions";
 import { Panel, PanelHeader, Chip, Bar, StatusBadge, Advisory } from "@/components/dash/ui";
 import { InspectionViewer } from "@/components/dash/InspectionViewer";
 import { useSelection } from "@/lib/selection";
