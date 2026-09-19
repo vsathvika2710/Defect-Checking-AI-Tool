@@ -47,8 +47,10 @@ Rules:
 - Use "review" when something may be wrong but you are unsure (confidence 45-69).
 - Use "novel" when an anomaly is present that matches no common class.
 - Never invent a defect that is not visible in the image. A clean, unbroken glass or part is "accepted".
-- bbox is a percentage region of the image (x, y, w, h, 0-100) around the defect. When hasRegion is false, return zeros.
-- confidence/uncertainty/novelty are 0-100 integers. evidence is 2-4 short factual observations about the image; kind "image" for visual observations.`;
+- LOCALISATION IS CRITICAL. bbox is the region of the defect in PERCENT of the full image: x = distance from the LEFT edge to the box's left side, y = distance from the TOP edge to the box's top side, w/h = box size. All 0-100, and x+w <= 100, y+h <= 100.
+  Work it out explicitly before answering: decide which third of the width the defect sits in (left 0-33, middle 33-66, right 66-100) and which third of the height (top 0-33, middle 33-66, bottom 66-100), then refine to a tight box that just contains the defect plus a small margin. For a thin crack, the box must cover its full length (often tall and narrow, or wide and short) — never a small square in the middle by default.
+  When hasRegion is false, return zeros.
+- confidence/uncertainty/novelty are 0-100 integers. evidence is 2-4 short factual observations about the image; kind "image" for visual observations. In the first evidence item, state the defect's position in words (e.g. "upper-left of the bottle neck") so it can be checked against the box.`;
 
 export const analyseInspectionImage = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => Input.parse(input))

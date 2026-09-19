@@ -5,6 +5,7 @@ import { Bar, StatusBadge } from "./ui";
 
 export function InspectionViewer({ insp, compact = false }: { insp: Inspection; compact?: boolean }) {
   const [mode, setMode] = useState<"box" | "heat">("box");
+  const [aspect, setAspect] = useState<number | null>(null);
   const meta = VERDICT_META[insp.verdict];
   const boxTone = insp.verdict === "novel" ? "border-signal" : insp.verdict === "review" ? "border-warn" : "border-defect";
   const labelTone = insp.verdict === "novel" ? "bg-signal" : insp.verdict === "review" ? "bg-warn" : "bg-defect";
@@ -35,8 +36,20 @@ export function InspectionViewer({ insp, compact = false }: { insp: Inspection; 
         </div>
       </div>
 
-      <div className="relative overflow-hidden rounded-lg ring-1 ring-line">
-        <img src={insp.image} alt={insp.product} width={1024} height={640} className="aspect-[16/10] w-full object-cover" />
+      <div
+        className="relative overflow-hidden rounded-lg bg-base ring-1 ring-line"
+        style={{ aspectRatio: aspect ?? 16 / 10, maxHeight: "60vh", margin: "0 auto" }}
+      >
+        <img
+          key={insp.id}
+          src={insp.image}
+          alt={insp.product}
+          onLoad={(e) => {
+            const el = e.currentTarget;
+            if (el.naturalWidth && el.naturalHeight) setAspect(el.naturalWidth / el.naturalHeight);
+          }}
+          className="h-full w-full object-fill"
+        />
         {insp.bbox && mode === "box" && (
           <>
             <div

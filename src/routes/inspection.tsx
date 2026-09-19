@@ -48,7 +48,8 @@ function InspectionPage() {
         reader.readAsDataURL(file);
       });
 
-      const r = await analyse({ data: { dataUrl, fileName: file.name } });
+      const sendUrl = await shrink(dataUrl);
+      const r = await analyse({ data: { dataUrl: sendUrl, fileName: file.name } });
 
       const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
       const u: Inspection = {
@@ -218,6 +219,28 @@ function InspectionPage() {
       </div>
     </div>
   );
+}
+
+async function shrink(dataUrl: string, max = 896): Promise<string> {
+  try {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const el = new Image();
+      el.onload = () => resolve(el);
+      el.onerror = () => reject(new Error("decode failed"));
+      el.src = dataUrl;
+    });
+    const scale = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    if (scale === 1) return dataUrl;
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(img.naturalWidth * scale);
+    canvas.height = Math.round(img.naturalHeight * scale);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return dataUrl;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL("image/jpeg", 0.82);
+  } catch {
+    return dataUrl;
+  }
 }
 
 function Metric({ label, value, tone }: { label: string; value: number; tone: "signal" | "warn" | "defect" | "ok" }) {
